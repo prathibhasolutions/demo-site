@@ -1,9 +1,24 @@
 version: 0.2
+
 phases:
+  install:
+    commands:
+      - echo "Installing AWS CLI..."
+      - apt-get update
+      - apt-get install -y awscli
+      
+  pre_build:
+    commands:
+      - echo "Checking S3 bucket access..."
+      - aws s3 ls s3://student-demo-bucket-shravan/ --region us-east-1
+      
   build:
     commands:
-      - echo "🚀 AWS DevOps building..."
-      - aws s3 sync . s3://student-demo-bucket/ --delete
+      - echo "🚀 AWS DevOps Demo Build Starting..."
+      - echo "Syncing files to S3 website..."
+      - aws s3 sync . s3://student-demo-bucket-shravan/ --delete --region us-east-1
+      
   post_build:
     commands:
-      - echo "✅ Deployed to LIVE website!"
+      - echo "✅ Deployment COMPLETE!"
+      - echo "🌐 Website: http://student-demo-bucket-shravan.s3-website-us-east-1.amazonaws.com"
